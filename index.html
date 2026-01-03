@@ -1,0 +1,189 @@
+<!-- Author: Kyle Hudson — Personal page — 2026 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kyle Hudson</title>
+  <style>
+    /* Page base styles: system font stack, dark background, center content */
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background: transparent;
+      padding: 0;
+      max-width: 720px;
+      width: 100%;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 1rem; /* allows inner corners to be visible */
+    }
+
+    .left,
+    .right {
+      background: #020617;
+      border-radius: 1rem; /* rounds ALL corners, inside + outside */
+      padding: 2.5rem;
+    }
+
+    .right {
+      text-align: center;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    .profile-pic {
+      width: 100%;
+      max-width: 220px;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      margin-bottom: 1.25rem;
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    p.subtitle {
+      color: #94a3b8;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+
+    ul.links {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 2rem 0;
+    }
+
+    ul.links li {
+      margin-bottom: 0.75rem;
+    }
+
+    ul.links a {
+      color: #38bdf8;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    ul.links a:hover {
+      text-decoration: underline;
+    }
+
+    .weather {
+      padding-top: 1.5rem;
+      border-top: 1px solid #1e293b;
+    }
+
+    .weather h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .weather p {
+      margin: 0.25rem 0;
+      color: #cbd5f5;
+    }
+
+    .muted {
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="layout">
+      <div class="left">
+        <h1>Kyle Hudson</h1>
+        <p class="subtitle">Zoology MSc Student • Data & Code</p>
+
+        <ul class="links">
+          <!-- Added rel for security when using target="_blank" -->
+          <li><a href="Kyle_Hudson_CV.csv" target="_blank" rel="noopener noreferrer">📄 Curriculum Vitae (CSV)</a></li>
+          <li><a href="https://github.com/kphudson13" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+        </ul>
+      </div>
+
+      <div class="right">
+        <img src="ProfilePic.jpg" alt="Profile picture of Kyle Hudson" class="profile-pic" />
+
+        <div class="weather" aria-live="polite">
+          <!-- aria-live added to announce updates to assistive tech (screen readers) -->
+          <h2>Current Weather — Edmonton, AB</h2>
+          <p id="weather-status">Loading weather…</p>
+          <p id="weather-temp"></p>
+          <p id="weather-extra" class="muted"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Edmonton coordinates
+    const LAT = 53.5461;
+    const LON = -113.4938;
+
+    const weatherCodeMap = {
+      0: "Clear sky",
+      1: "Mainly clear",
+      2: "Partly cloudy",
+      3: "Overcast",
+      45: "Fog",
+      48: "Depositing rime fog",
+      51: "Light drizzle",
+      53: "Moderate drizzle",
+      55: "Dense drizzle",
+      61: "Slight rain",
+      63: "Moderate rain",
+      65: "Heavy rain",
+      71: "Slight snow fall",
+      73: "Moderate snow fall",
+      75: "Heavy snow fall",
+      80: "Rain showers",
+      81: "Heavy rain showers",
+      82: "Violent rain showers",
+      95: "Thunderstorm"
+    };
+
+    // Fetch current weather and update DOM (basic error handling included)
+    async function loadWeather() {
+      try {
+        const res = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,apparent_temperature,weathercode,wind_speed_10m&timezone=auto`
+        );
+        if (!res.ok) throw new Error("Weather request failed");
+        const data = await res.json();
+
+        const current = data.current;
+        const description = weatherCodeMap[current.weathercode] || "Unknown conditions";
+
+        document.getElementById("weather-status").textContent = description;
+        document.getElementById("weather-temp").textContent =
+          `${Math.round(current.temperature_2m)}°C (feels like ${Math.round(current.apparent_temperature)}°C)`;
+        document.getElementById("weather-extra").textContent =
+          `Wind: ${Math.round(current.wind_speed_10m)} km/h`;
+      } catch (err) {
+        document.getElementById("weather-status").textContent = "Unable to load weather data.";
+        document.getElementById("weather-temp").textContent = "";
+        document.getElementById("weather-extra").textContent = "";
+      }
+    }
+
+    loadWeather();
+  </script>
+</body>
+</html>
