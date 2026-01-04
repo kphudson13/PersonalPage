@@ -252,16 +252,29 @@
 
       // Try to load files.json manifest first; if missing, attempt to parse a directory listing (if server exposes one).
       async function loadFolderFiles(folder) {
+        let manifestErr = null;
+
         // try manifest
         try {
           const res = await fetch(`${folder}/files.json`);
           if (res.ok) {
             const files = await res.json();
             if (files && files.length) return files;
+            manifestErr = 'Manifest found but empty';
+          } else {
+            manifestErr = `Manifest fetch returned ${res.status} ${res.statusText}`;
           }
-        } catch (e) { /* ignore and fall through */ }
+        } catch (e) {
+          manifestErr = `Manifest fetch failed: ${e && e.message ? e.message : String(e)}`;
+        }
+
+        // if page is opened via file:// the browser may block fetch—give a clear hint
+        if (window.location.protocol === 'file:') {
+          throw new Error(`No manifest found (tried ${folder}/files.json). The page is opened via file:// and fetch is blocked by the browser. Serve the site over HTTP (for example, run \`python -m http.server\` in the project root) and try again.`);
+        }
 
         // try directory index (parse HTML anchors)
+        let dirErr = null;
         try {
           const res = await fetch(`${folder}/`);
           if (res.ok && res.headers.get('content-type') && res.headers.get('content-type').includes('text/html')) {
@@ -285,10 +298,18 @@
               })
               .filter(Boolean);
             if (files.length) return files;
+            dirErr = 'Directory index parsed but no file links found';
+          } else if (res && !res.ok) {
+            dirErr = `Directory fetch returned ${res.status} ${res.statusText}`;
+          } else {
+            dirErr = 'Directory index is not available or not HTML';
           }
-        } catch (e) { /* ignore */ }
+        } catch (e) {
+          dirErr = `Directory fetch failed: ${e && e.message ? e.message : String(e)}`;
+        }
 
-        throw new Error('No manifest and no directory listing available. Run `node generate-manifest.js <folder>` to create a manifest.');
+        // Final helpful error
+        throw new Error(`No manifest and no directory listing available.\nManifest: ${manifestErr}\nDirectory: ${dirErr}\nTo fix: add ${folder}/files.json (run \`node generate-manifest.js ${folder}\`) or serve the site over HTTP.`);
       }
 
       loadFolderFiles(folder)

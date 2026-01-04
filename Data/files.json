@@ -1,10 +1,14 @@
-[
-  {
-    "name": "CortisolDataClean.csv",
-    "url": "Data/CortisolDataClean.csv"
-  },
-  {
-    "name": "CrtstnDataClean.csv",
-    "url": "Data/CrtstnDataClean.csv"
-  }
+﻿[
+    {
+        "name":  "Chaetae_counts.csv",
+        "url":  "Data/Chaetae_counts.csv"
+    },
+    {
+        "name":  "CortisolDataClean.csv",
+        "url":  "Data/CortisolDataClean.csv"
+    },
+    {
+        "name":  "CrtstnDataClean.csv",
+        "url":  "Data/CrtstnDataClean.csv"
+    }
 ]
