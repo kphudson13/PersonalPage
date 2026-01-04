@@ -10,7 +10,11 @@
     /* Page base styles: system font stack, dark background, center content */
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0f172a;
+      background-image: url('Background.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: #0f172a; /* fallback */
       color: #e5e7eb;
       display: flex;
       justify-content: center;
@@ -21,15 +25,23 @@
 
     .card {
       background: transparent;
-      padding: 0;
+      padding: 1rem 0; /* vertical buffer so panels don't touch viewport edges */
       max-width: 720px;
       width: 100%;
+      box-sizing: border-box;
     }
 
     .layout {
       display: grid;
-      grid-template-columns: 1fr 260px;
-      gap: 1rem; /* allows inner corners to be visible */
+      grid-template-columns: 1fr 320px; /* increased width to reduce wrapping */
+      gap: 1rem; /* keeps inner corners visible between panels */
+    }
+
+    /* Responsive: stack panels on small screens and reduce padding */
+    @media (max-width: 700px) {
+      .layout { grid-template-columns: 1fr; }
+      .card { padding: 1.25rem; }
+      .left, .right { padding: 1.5rem; }
     }
 
     .left,
@@ -39,8 +51,14 @@
       padding: 2.5rem;
     }
 
-    .right {
+    .left {
       text-align: center;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    .right {
+      text-align: left;
       padding-left: 2rem;
       padding-right: 2rem;
     }
@@ -84,6 +102,17 @@
       text-decoration: underline;
     }
 
+    /* folder links (moved to right panel) */
+    ul.folder-links {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.25rem 0;
+    }
+
+    ul.folder-links li {
+      margin-bottom: 0.5rem;
+    }
+
     .weather {
       padding-top: 1.5rem;
       border-top: 1px solid #1e293b;
@@ -103,37 +132,213 @@
       color: #64748b;
       font-size: 0.9rem;
     }
+
+    /* Make contact title and info bold for emphasis */
+    .contacts p {
+      font-weight: 700;
+      margin: 0 0 0.5rem 0;
+    }
+
+    /* File panel overlay + panel */
+    .file-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(2px);
+      z-index: 40;
+    }
+
+    .file-panel {
+      position: fixed;
+      right: 1rem;
+      top: 4rem;
+      width: 360px;
+      max-width: calc(100% - 2rem);
+      background: #071022;
+      color: #e6eef8;
+      border-radius: 0.75rem;
+      box-shadow: 0 15px 30px rgba(2,6,23,0.6);
+      z-index: 50;
+      padding: 1rem;
+    }
+
+    .file-panel header {
+      display:flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .file-panel h3 {
+      margin:0;
+      font-size:1.125rem;
+    }
+
+    .file-panel button {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.125rem;
+      cursor: pointer;
+    }
+
+    #file-panel-content p.muted { margin:0; }
+
   </style>
 </head>
 <body>
   <div class="card">
     <div class="layout">
       <div class="left">
+        <img src="ProfilePic.jpg" alt="Profile picture of Kyle Hudson" class="profile-pic" />
         <h1>Kyle Hudson</h1>
-        <p class="subtitle">Zoology MSc Student • Data & Code</p>
+        <p class="subtitle">Zoology MSc Student</p>
+
+        <div class="weather" aria-live="polite">
+          <h2>Kyle's currently in Edmonton, AB</h2>
+          <p id="weather-temp"></p>
+          <p id="weather-status">Loading weather…</p>
+          <p id="weather-extra" class="muted"></p>
+        </div>
+      </div>
+
+      <div class="right">
+        <!-- Contact information: professional and personal emails -->
+        <div class="contacts">
+          <p class="muted" aria-hidden="true">Contact</p>
+          <p><span class="muted">Personal:</span> <a href="mailto:kphudson@live.ca">kphudson@live.ca</a></p>
+          <p><span class="muted">Professional:</span> <a href="mailto:hudson.k@ufl.edu">hudson.k@ufl.edu</a></p>
+        </div>
+
+        <ul class="links folder-links">
+          <li><a href="#" onclick="openFolder('Documents'); return false;">📁 Documents</a></li>
+          <li><a href="#" onclick="openFolder('Data'); return false;">🗂️ Data</a></li>
+        </ul>
 
         <ul class="links">
           <!-- Added rel for security when using target="_blank" -->
           <li><a href="Kyle_Hudson_CV.csv" target="_blank" rel="noopener noreferrer">📄 Curriculum Vitae (CSV)</a></li>
           <li><a href="https://github.com/kphudson13" target="_blank" rel="noopener noreferrer">💻 GitHub</a></li>
+          <li><a href="https://www.instagram.com/_.kylehudson/" target="_blank" rel="noopener noreferrer">📷 Instagram</a></li>
+          <li><a href="https://kphudson.shinyapps.io/AnimalTreeApp/" target="_blank" rel="noopener noreferrer">🦀 Animal Tree App</a></li>
         </ul>
-      </div>
-
-      <div class="right">
-        <img src="ProfilePic.jpg" alt="Profile picture of Kyle Hudson" class="profile-pic" />
-
-        <div class="weather" aria-live="polite">
-          <!-- aria-live added to announce updates to assistive tech (screen readers) -->
-          <h2>Current Weather — Edmonton, AB</h2>
-          <p id="weather-status">Loading weather…</p>
-          <p id="weather-temp"></p>
-          <p id="weather-extra" class="muted"></p>
-        </div>
       </div>
     </div>
   </div>
 
-  <script>
+  <!-- File panel (hidden by default) -->
+  <div id="file-overlay" class="file-overlay" hidden></div>
+  <aside id="file-panel" class="file-panel" role="dialog" aria-modal="true" aria-hidden="true" hidden>
+    <header>
+      <h3 id="file-panel-title">Files</h3>
+      <button id="file-panel-close" aria-label="Close">✕</button>
+    </header>
+    <div id="file-panel-content">Loading…</div>
+  </aside>
+
+  <script> 
+    // File panel functions
+    function openFolder(folder) {
+      const overlay = document.getElementById('file-overlay');
+      const panel = document.getElementById('file-panel');
+      const title = document.getElementById('file-panel-title');
+      const content = document.getElementById('file-panel-content');
+
+      overlay.hidden = false;
+      panel.hidden = false;
+      panel.setAttribute('aria-hidden', 'false');
+      title.textContent = folder.charAt(0).toUpperCase() + folder.slice(1);
+      content.textContent = 'Loading…';
+
+      // Try to load files.json manifest first; if missing, attempt to parse a directory listing (if server exposes one).
+      async function loadFolderFiles(folder) {
+        // try manifest
+        try {
+          const res = await fetch(`${folder}/files.json`);
+          if (res.ok) {
+            const files = await res.json();
+            if (files && files.length) return files;
+          }
+        } catch (e) { /* ignore and fall through */ }
+
+        // try directory index (parse HTML anchors)
+        try {
+          const res = await fetch(`${folder}/`);
+          if (res.ok && res.headers.get('content-type') && res.headers.get('content-type').includes('text/html')) {
+            const text = await res.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(text, 'text/html');
+            const anchors = Array.from(doc.querySelectorAll('a[href]'));
+            const files = anchors
+              .map(a => {
+                const href = a.getAttribute('href');
+                const name = a.textContent || href;
+                if (!href || href === '../' || href === '/') return null;
+                // normalize URL to be folder-relative
+                let url = href;
+                if (!href.startsWith(folder + '/') && !href.startsWith('/') && !href.startsWith('http')) {
+                  url = `${folder}/${href}`;
+                } else if (href.startsWith('/')) {
+                  url = href.slice(1); // remove leading slash to keep relative links working
+                }
+                return { name, url };
+              })
+              .filter(Boolean);
+            if (files.length) return files;
+          }
+        } catch (e) { /* ignore */ }
+
+        throw new Error('No manifest and no directory listing available. Run `node generate-manifest.js <folder>` to create a manifest.');
+      }
+
+      loadFolderFiles(folder)
+        .then(files => {
+          const ul = document.createElement('ul');
+          ul.className = 'links';
+
+          files.forEach(f => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = f.url;
+            a.textContent = f.name;
+            a.setAttribute('download', '');
+            li.appendChild(a);
+            ul.appendChild(li);
+          });
+
+          content.innerHTML = '';
+          content.appendChild(ul);
+        })
+        .catch(err => {
+          const msg = err && err.message ? err.message : String(err);
+          let hint = '';
+          if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) {
+            hint = '<p class="muted">If you opened this page locally (file://), serve the site over HTTP (for example, run <code>python -m http.server</code> in the project root) and try again.</p>';
+          }
+          content.innerHTML = `<p class="muted">Could not load files: ${msg}</p>` + hint;
+        });
+
+      // focus the close button for accessibility
+      document.getElementById('file-panel-close').focus();
+    }
+
+    function closePanel() {
+      const overlay = document.getElementById('file-overlay');
+      const panel = document.getElementById('file-panel');
+      overlay.hidden = true;
+      panel.hidden = true;
+      panel.setAttribute('aria-hidden', 'true');
+    }
+
+    // Events for close interactions
+    document.addEventListener('DOMContentLoaded', () => {
+      const closeBtn = document.getElementById('file-panel-close');
+      const overlay = document.getElementById('file-overlay');
+      if (closeBtn) closeBtn.addEventListener('click', closePanel);
+      if (overlay) overlay.addEventListener('click', closePanel);
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePanel(); });
+    });
+
     // Edmonton coordinates
     const LAT = 53.5461;
     const LON = -113.4938;
