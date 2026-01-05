@@ -33,7 +33,7 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 1fr 320px; /* increased width to reduce wrapping */
+      grid-template-columns: 320px 320px 320px; /* left, middle (links), right (weather) */
       gap: 1rem; /* keeps inner corners visible between panels */
     }
 
@@ -42,6 +42,7 @@
       .layout { grid-template-columns: 1fr; }
       .card { padding: 1.25rem; }
       .left, .right { padding: 1.5rem; }
+      .weather-column { padding: 1.5rem; }
     }
 
     .left,
@@ -49,6 +50,20 @@
       background: #020617;
       border-radius: 1rem; /* rounds ALL corners, inside + outside */
       padding: 2.5rem;
+    }
+
+    .weather-column {
+      padding: 1rem 2.5rem;
+      display: flex;
+      align-items: flex-start;
+      background: rgba(7,16,34,0.55);
+      backdrop-filter: blur(6px);
+      border-radius: 1rem;
+      border: 1px solid rgba(255,255,255,0.04);
+      box-sizing: border-box;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-self: start; /* prevent grid item from stretching to full row height */
     }
 
     .left {
@@ -128,6 +143,42 @@
       color: #cbd5f5;
     }
 
+    /* Tighten spacing for weather column lines so they sit closer together */
+    .weather-column {
+      gap: 0.125rem; /* space between stacked items in the column */
+    }
+
+    .weather-column h2 {
+      margin-bottom: 0.25rem;
+    }
+
+    .weather-column p {
+      margin: 0.12rem 0;
+      line-height: 1.15;
+      color: #cbd5f5; /* ensure same color as other weather text */
+    }
+
+    /* Weather icon shown above the weather text (emoji or small glyph) */
+    .weather-icon {
+      display: inline-block;
+      font-size: 1.2rem;
+      line-height: 1;
+      margin-right: 0.5rem;
+      width: 1.6rem;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .weather h2 {
+      font-size: 1.125rem;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .weather p {
+      margin: 0.25rem 0;
+      color: #cbd5f5;
+    }
+
     .muted {
       color: #64748b;
       font-size: 0.9rem;
@@ -187,21 +238,32 @@
   </style>
 </head>
 <body>
+  <!--
+    index.html — Personal page
+    Overview:
+    - Layout: three-column CSS grid (.left, .right, .weather-column)
+    - Left: profile picture, name, subtitle, About text
+    - Right: contact info, folder links, other links
+    - Weather column: small semi-transparent card showing current weather
+    - File panel: modal-like panel that loads `files.json` or parses a directory listing
+    - Inline script provides UI interactions (openFolder, loadFolderFiles, weather fetching)
+  -->
   <div class="card">
     <div class="layout">
+      <!-- Left column: profile + About -->
       <div class="left">
         <img src="ProfilePic.jpg" alt="Profile picture of Kyle Hudson" class="profile-pic" />
         <h1>Kyle Hudson</h1>
         <p class="subtitle">Zoology MSc Student</p>
 
-        <div class="weather" aria-live="polite">
-          <h2>Kyle's currently in Gainesville, FL</h2>
-          <p id="weather-temp"></p>
-          <p id="weather-status">Loading weather…</p>
-          <p id="weather-extra" class="muted"></p>
+        <!-- About: short bio shown below the profile picture -->
+        <div class="about" aria-live="polite">
+          <h2>About</h2>
+          <p class="muted">MSc student at the University of Florida. Research interests: conservation biology, physiological ecology, and data-driven analysis. A big fan of anything outside, nature or sports.</p>
         </div>
       </div>
 
+      <!-- Right column: contacts, folder links, other links -->
       <div class="right">
         <!-- Contact information: professional and personal emails -->
         <div class="contacts">
@@ -210,6 +272,7 @@
           <p><span class="muted">Professional:</span> <a href="mailto:hudson.k@ufl.edu">hudson.k@ufl.edu</a></p>
         </div>
 
+        <!-- Folder links: open a file panel populated from Documents/files.json or Data/files.json -->
         <ul class="links folder-links">
           <li><a href="#" onclick="openFolder('Documents'); return false;">📁 Documents</a></li>
           <li><a href="#" onclick="openFolder('Data'); return false;">🗂️ Data</a></li>
@@ -222,6 +285,18 @@
           <li><a href="https://www.instagram.com/_.kylehudson/" target="_blank" rel="noopener noreferrer">📷 Instagram</a></li>
           <li><a href="https://kphudson.shinyapps.io/AnimalTreeApp/" target="_blank" rel="noopener noreferrer">🦀 Animal Tree App</a></li>
         </ul>
+      </div>
+
+      <!-- Weather column: small semi-transparent card -->
+      <div class="weather-column" aria-live="polite">
+        <!-- Heading shows the current location (used for human-readability) -->
+        <h2>Kyle's currently in Gainesville, FL</h2>
+        <!-- Filled by JS: current temperature -->
+        <p id="weather-temp"></p>
+        <!-- Filled by JS: icon + textual weather description (icon is decorative, placed inline) -->
+        <p id="weather-status"><span id="weather-icon" class="weather-icon" aria-hidden="true"></span>Loading weather…</p>
+        <!-- Filled by JS: extra info like wind speed -->
+        <p id="weather-extra"></p>
       </div>
     </div>
   </div>
@@ -237,6 +312,11 @@
   </aside>
 
   <script> 
+    // --- File panel and folder-loading functions ---
+    // These handle opening the modal panel and retrieving a list of files
+    // Prefer `folder/files.json` (manifest). If missing, attempt to parse
+    // a directory listing HTML returned by the server.
+    
     // File panel functions
     function openFolder(folder) {
       const overlay = document.getElementById('file-overlay');
@@ -254,12 +334,12 @@
       async function loadFolderFiles(folder) {
         let manifestErr = null;
 
-        // try manifest
+        // try manifest: this is the preferred, deterministic source of file metadata
         try {
           const res = await fetch(`${folder}/files.json`);
           if (res.ok) {
             const files = await res.json();
-            if (files && files.length) return files;
+            if (files && files.length) return files; // manifest present and non-empty
             manifestErr = 'Manifest found but empty';
           } else {
             manifestErr = `Manifest fetch returned ${res.status} ${res.statusText}`;
@@ -268,12 +348,12 @@
           manifestErr = `Manifest fetch failed: ${e && e.message ? e.message : String(e)}`;
         }
 
-        // if page is opened via file:// the browser may block fetch—give a clear hint
+        // Helpful hint when opened via file:// - fetch is often blocked by the browser
         if (window.location.protocol === 'file:') {
           throw new Error(`No manifest found (tried ${folder}/files.json). The page is opened via file:// and fetch is blocked by the browser. Serve the site over HTTP (for example, run \`python -m http.server\` in the project root) and try again.`);
         }
 
-        // try directory index (parse HTML anchors)
+        // try directory index (parse HTML anchors). This is a fallback when the server exposes a simple directory listing.
         let dirErr = null;
         try {
           const res = await fetch(`${folder}/`);
@@ -297,7 +377,7 @@
                 return { name, url };
               })
               .filter(Boolean);
-            if (files.length) return files;
+            if (files.length) return files; // directory parse succeeded
             dirErr = 'Directory index parsed but no file links found';
           } else if (res && !res.ok) {
             dirErr = `Directory fetch returned ${res.status} ${res.statusText}`;
@@ -308,10 +388,11 @@
           dirErr = `Directory fetch failed: ${e && e.message ? e.message : String(e)}`;
         }
 
-        // Final helpful error
+        // Final helpful error with suggested fixes
         throw new Error(`No manifest and no directory listing available.\nManifest: ${manifestErr}\nDirectory: ${dirErr}\nTo fix: add ${folder}/files.json (run \`node generate-manifest.js ${folder}\`) or serve the site over HTTP.`);
       }
 
+      // Kick off loading the file list, then render results or an error message
       loadFolderFiles(folder)
         .then(files => {
           const ul = document.createElement('ul');
@@ -343,6 +424,7 @@
       document.getElementById('file-panel-close').focus();
     }
 
+    // Close/hide the file panel overlay and restore page state
     function closePanel() {
       const overlay = document.getElementById('file-overlay');
       const panel = document.getElementById('file-panel');
@@ -386,23 +468,58 @@
       95: "Thunderstorm"
     };
 
+    // Map weather codes to a small emoji icon for display in the panel.
+    function codeToIcon(code) {
+      if (code === 0) return '☀️';
+      if (code === 1) return '🌤️';
+      if (code === 2) return '⛅';
+      if (code === 3) return '☁️';
+      if (code === 45 || code === 48) return '🌫️';
+      if (code >= 51 && code <= 55) return '🌦️';
+      if ((code >= 61 && code <= 65) || (code >= 80 && code <= 82)) return '🌧️';
+      if (code >= 71 && code <= 75) return '❄️';
+      if (code === 95) return '⛈️';
+      return '❓';
+    }
+
     // Fetch current weather and update DOM (basic error handling included)
+    // Uses the open-meteo public API (no API key required).
     async function loadWeather() {
       try {
+        // Request the provider's current weather payload. `current_weather=true`
+        // returns a compact `current_weather` object with `temperature`, `windspeed`, and `weathercode`.
         const res = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,apparent_temperature,weathercode,wind_speed_10m&timezone=auto`
+          `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current_weather=true&timezone=auto&temperature_unit=celsius&windspeed_unit=kmh`
         );
         if (!res.ok) throw new Error("Weather request failed");
         const data = await res.json();
 
-        const current = data.current;
+        const current = data.current_weather;
+        if (!current) throw new Error('No current weather returned');
         const description = weatherCodeMap[current.weathercode] || "Unknown conditions";
 
-        document.getElementById("weather-status").textContent = description;
+        // Set icon (decorative) placed inline next to the status text
+        const iconEl = document.getElementById('weather-icon');
+        if (iconEl) {
+          const icon = codeToIcon(current.weathercode);
+          iconEl.textContent = icon;
+          // Keep the icon decorative for assistive tech; the textual description is announced.
+          iconEl.setAttribute('aria-hidden', 'true');
+        }
+
+        // Populate readable fields from the `current_weather` payload
+        // Ensure we preserve the inline icon span when writing the description
+        const statusEl = document.getElementById('weather-status');
+        if (statusEl) {
+          // Clear existing content, then append the (possibly detached) icon element and text
+          statusEl.innerHTML = '';
+          if (iconEl) statusEl.appendChild(iconEl);
+          statusEl.appendChild(document.createTextNode(description));
+        }
         document.getElementById("weather-temp").textContent =
-          `${Math.round(current.temperature_2m)}°C (feels like ${Math.round(current.apparent_temperature)}°C)`;
+          `${Math.round(current.temperature)}°C`;
         document.getElementById("weather-extra").textContent =
-          `Wind: ${Math.round(current.wind_speed_10m)} km/h`;
+          `Wind: ${Math.round(current.windspeed)} km/h`;
       } catch (err) {
         document.getElementById("weather-status").textContent = "Unable to load weather data.";
         document.getElementById("weather-temp").textContent = "";
