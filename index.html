@@ -15,7 +15,7 @@
       background-position: center;
       background-repeat: no-repeat;
       background-color: #0f172a; /* fallback */
-      color: #e5e7eb;
+      color: #e5e7eb; /* light large text */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -93,7 +93,7 @@
     }
 
     p.subtitle {
-      color: #94a3b8;
+      color: #afc1db;
       margin-top: 0;
       margin-bottom: 1.5rem;
     }
@@ -109,16 +109,16 @@
     }
 
     ul.links a {
-      color: #38bdf8;
-      text-decoration: none;
+      color: #38bdf8; 
+      text-decoration: none; /* no underline by default */
       font-weight: 500;
     }
 
     ul.links a:hover {
-      text-decoration: underline;
+      text-decoration: underline; /* underline on hover */
     }
 
-    /* folder links (moved to right panel) */
+    /* folder links */
     ul.folder-links {
       margin: 0 0 1.25rem 0;
     }
@@ -134,7 +134,7 @@
     .weather-column p {
       margin: 0.12rem 0;
       line-height: 1.15;
-      color: #cbd5f5; /* ensure same color as other weather text */
+      color: #cbd5f5; 
     }
 
     /* Weather icon shown above the weather text (emoji or small glyph) */
@@ -152,10 +152,9 @@
       color: #64748b;
       font-size: 0.9rem;
     }
-
-    /* Make contact title and info bold for emphasis */
+    
     .contacts p {
-      font-weight: 700;
+      font-weight: 700; /* Make contact title and info bold */
       margin: 0 0 0.5rem 0;
     }
 
