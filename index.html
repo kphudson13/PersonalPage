@@ -64,6 +64,7 @@
       flex-direction: column;
       justify-content: flex-start;
       align-self: start; /* prevent grid item from stretching to full row height */
+      gap: 0.125rem; /* space between stacked items in the column */
     }
 
     .left {
@@ -119,33 +120,11 @@
 
     /* folder links (moved to right panel) */
     ul.folder-links {
-      list-style: none;
-      padding: 0;
       margin: 0 0 1.25rem 0;
     }
 
     ul.folder-links li {
       margin-bottom: 0.5rem;
-    }
-
-    .weather {
-      padding-top: 1.5rem;
-      border-top: 1px solid #1e293b;
-    }
-
-    .weather h2 {
-      font-size: 1.25rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .weather p {
-      margin: 0.25rem 0;
-      color: #cbd5f5;
-    }
-
-    /* Tighten spacing for weather column lines so they sit closer together */
-    .weather-column {
-      gap: 0.125rem; /* space between stacked items in the column */
     }
 
     .weather-column h2 {
@@ -167,16 +146,6 @@
       width: 1.6rem;
       text-align: center;
       vertical-align: middle;
-    }
-
-    .weather h2 {
-      font-size: 1.125rem;
-      margin: 0 0 0.5rem 0;
-    }
-
-    .weather p {
-      margin: 0.25rem 0;
-      color: #cbd5f5;
     }
 
     .muted {
