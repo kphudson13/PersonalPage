@@ -222,13 +222,6 @@
       transform: scale(1.04);
     }
 
-    .picture-grid figcaption {
-      padding: 0.3rem 0.5rem;
-      font-size: 0.75rem;
-      color: #cbd5f5;
-      word-break: break-word;
-    }
-
     /* Lightbox for viewing a full-size picture on top of the panel */
     .lightbox-overlay {
       position: fixed;
@@ -505,11 +498,7 @@
               img.loading = 'lazy';
               img.addEventListener('click', () => openLightbox(f.url, f.name));
 
-              const caption = document.createElement('figcaption');
-              caption.textContent = f.name;
-
               figure.appendChild(img);
-              figure.appendChild(caption);
               grid.appendChild(figure);
             });
 
