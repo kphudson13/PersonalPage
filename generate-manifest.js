@@ -23,7 +23,7 @@ async function generate(folder) {
 async function main() {
   const args = process.argv.slice(2);
   // Default to both folders so running `node generate-manifest.js` covers Documents and Data
-  const folders = args.length ? args : ['Data', 'Documents'];
+  const folders = args.length ? args : ['Data', 'Documents', 'Pictures'];
   for (const f of folders) {
     await generate(f);
   }

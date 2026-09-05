@@ -173,12 +173,86 @@
       top: 4rem;
       width: 360px;
       max-width: calc(100% - 2rem);
+      max-height: calc(100vh - 6rem);
+      overflow-y: auto;
       background: #071022;
       color: #e6eef8;
       border-radius: 0.75rem;
       box-shadow: 0 15px 30px rgba(2,6,23,0.6);
       z-index: 50;
       padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    /* Wider panel variant for image galleries */
+    .file-panel.file-panel-wide {
+      width: 640px;
+    }
+
+    /* Thumbnail grid used when a folder's files are images */
+    .picture-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.6rem;
+    }
+
+    .picture-grid figure {
+      margin: 0;
+      background: #020617;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .picture-grid img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      display: block;
+      cursor: zoom-in;
+      transition: transform 0.15s ease;
+    }
+
+    .picture-grid img:hover {
+      transform: scale(1.04);
+    }
+
+    .picture-grid figcaption {
+      padding: 0.3rem 0.5rem;
+      font-size: 0.75rem;
+      color: #cbd5f5;
+      word-break: break-word;
+    }
+
+    /* Lightbox for viewing a full-size picture on top of the panel */
+    .lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+
+    .lightbox-overlay img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 0.5rem;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+
+    .lightbox-close {
+      position: fixed;
+      top: 1rem;
+      right: 1.5rem;
+      background: transparent;
+      border: none;
+      color: #e5e7eb;
+      font-size: 2rem;
+      cursor: pointer;
+      z-index: 61;
     }
 
     .file-panel header {
@@ -244,6 +318,7 @@
         <ul class="links folder-links">
           <li><a href="#" onclick="openFolder('Documents'); return false;">📁 Documents</a></li>
           <li><a href="#" onclick="openFolder('Data'); return false;">🗂️ Data</a></li>
+          <li><a href="#" onclick="openFolder('Pictures'); return false;">🔬 Pics of science and adjacent adventures</a></li>
         </ul>
 
         <ul class="links">
@@ -285,6 +360,38 @@
     // Prefer `folder/files.json` (manifest). If missing, attempt to parse
     // a directory listing HTML returned by the server.
     
+    // Extensions treated as pictures for the thumbnail-grid rendering
+    const IMAGE_EXT = /\.(jpe?g|png|gif|webp|bmp|svg|avif)$/i;
+
+    // Show a full-size picture on top of the panel
+    function openLightbox(src, alt) {
+      const overlay = document.createElement('div');
+      overlay.className = 'lightbox-overlay';
+
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = alt;
+      overlay.appendChild(img);
+
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'lightbox-close';
+      closeBtn.setAttribute('aria-label', 'Close');
+      closeBtn.textContent = '✕';
+      overlay.appendChild(closeBtn);
+
+      function close() {
+        overlay.remove();
+        document.removeEventListener('keydown', onKey);
+      }
+      function onKey(e) { if (e.key === 'Escape') close(); }
+
+      overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+      closeBtn.addEventListener('click', close);
+      document.addEventListener('keydown', onKey);
+
+      document.body.appendChild(overlay);
+    }
+
     // File panel functions
     function openFolder(folder) {
       const overlay = document.getElementById('file-overlay');
@@ -297,6 +404,9 @@
       panel.setAttribute('aria-hidden', 'false');
       title.textContent = folder.charAt(0).toUpperCase() + folder.slice(1);
       content.textContent = 'Loading…';
+
+      // Widen the panel for image galleries so thumbnails have room
+      panel.classList.remove('file-panel-wide');
 
       // Try to load files.json manifest first; if missing, attempt to parse a directory listing (if server exposes one).
       async function loadFolderFiles(folder) {
@@ -363,21 +473,51 @@
       // Kick off loading the file list, then render results or an error message
       loadFolderFiles(folder)
         .then(files => {
-          const ul = document.createElement('ul');
-          ul.className = 'links';
-
-          files.forEach(f => {
-            const li = document.createElement('li');
-            const a = document.createElement('a');
-            a.href = f.url;
-            a.textContent = f.name;
-            a.setAttribute('download', '');
-            li.appendChild(a);
-            ul.appendChild(li);
-          });
+          const isPictureFolder = files.length && files.every(f => IMAGE_EXT.test(f.name || f.url));
 
           content.innerHTML = '';
-          content.appendChild(ul);
+
+          if (isPictureFolder) {
+            // Show images as a thumbnail grid; click a thumbnail to view full-size
+            panel.classList.add('file-panel-wide');
+            const grid = document.createElement('div');
+            grid.className = 'picture-grid';
+
+            files.forEach(f => {
+              const figure = document.createElement('figure');
+
+              const img = document.createElement('img');
+              img.src = f.url;
+              img.alt = f.name;
+              img.loading = 'lazy';
+              img.addEventListener('click', () => openLightbox(f.url, f.name));
+
+              const caption = document.createElement('figcaption');
+              caption.textContent = f.name;
+
+              figure.appendChild(img);
+              figure.appendChild(caption);
+              grid.appendChild(figure);
+            });
+
+            content.appendChild(grid);
+          } else {
+            // Default: plain download links (used by Documents/Data)
+            const ul = document.createElement('ul');
+            ul.className = 'links';
+
+            files.forEach(f => {
+              const li = document.createElement('li');
+              const a = document.createElement('a');
+              a.href = f.url;
+              a.textContent = f.name;
+              a.setAttribute('download', '');
+              li.appendChild(a);
+              ul.appendChild(li);
+            });
+
+            content.appendChild(ul);
+          }
         })
         .catch(err => {
           const msg = err && err.message ? err.message : String(err);
