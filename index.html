@@ -192,8 +192,14 @@
     /* Thumbnail grid used when a folder's files are images */
     .picture-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 0.6rem;
+    }
+
+    @media (min-width: 520px) {
+      .picture-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
     }
 
     .picture-grid figure {
@@ -405,8 +411,12 @@
       title.textContent = folder.charAt(0).toUpperCase() + folder.slice(1);
       content.textContent = 'Loading…';
 
-      // Widen the panel for image galleries so thumbnails have room
+      // Widen the panel for image galleries so thumbnails have room.
+      // Decide up front based on the folder name (Pictures is always a gallery),
+      // so the panel is the right size before the fetch even resolves.
+      const isPictureFolderName = folder.toLowerCase() === 'pictures';
       panel.classList.remove('file-panel-wide');
+      if (isPictureFolderName) panel.classList.add('file-panel-wide');
 
       // Try to load files.json manifest first; if missing, attempt to parse a directory listing (if server exposes one).
       async function loadFolderFiles(folder) {
@@ -473,7 +483,10 @@
       // Kick off loading the file list, then render results or an error message
       loadFolderFiles(folder)
         .then(files => {
-          const isPictureFolder = files.length && files.every(f => IMAGE_EXT.test(f.name || f.url));
+          // A folder counts as a picture gallery if it's named Pictures, or if
+          // every file returned happens to be an image (belt-and-suspenders).
+          const isPictureFolder = isPictureFolderName ||
+            (files.length && files.every(f => IMAGE_EXT.test(f.name || f.url)));
 
           content.innerHTML = '';
 
