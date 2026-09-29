@@ -1,32 +1,58 @@
 #!/usr/bin/env node
+const fs = require("fs").promises;
+const path = require("path");
 
-const fs = require('fs').promises;
-const path = require('path');
+async function getPictures(folder) {
+  const dir = path.resolve(process.cwd(), folder);
+  const locations = await fs.readdir(dir, { withFileTypes: true });
+
+  const files = [];
+
+  for (const location of locations) {
+    if (!location.isDirectory()) continue;
+
+    const locationPath = path.join(dir, location.name);
+    const entries = await fs.readdir(locationPath, { withFileTypes: true });
+
+    for (const entry of entries) {
+      if (!entry.isFile()) continue;
+
+      files.push({
+        name: entry.name,
+        url: `${folder}/${location.name}/${entry.name}`,
+        location: location.name
+      });
+    }
+  }
+
+  await fs.writeFile(
+    path.join(dir, "files.json"),
+    JSON.stringify(files, null, 2) + "\n",
+    "utf8"
+  );
+
+  console.log(`Wrote ${files.length} pictures to ${folder}/files.json`);
+}
 
 async function generate(folder) {
   const dir = path.resolve(process.cwd(), folder);
-  try {
-    const entries = await fs.readdir(dir, { withFileTypes: true });
-    const files = entries
-      .filter(e => e.isFile())
-      .filter(e => e.name !== 'files.json')
-      .map(e => ({ name: e.name, url: `${folder}/${e.name}` }));
+  const entries = await fs.readdir(dir, { withFileTypes: true });
 
-    const out = JSON.stringify(files, null, 2) + '\n';
-    await fs.writeFile(path.join(dir, 'files.json'), out, 'utf8');
-    console.log(`Wrote ${files.length} items to ${path.join(folder, 'files.json')}`);
-  } catch (err) {
-    console.error(`Error processing ${folder}: ${err.message}`);
-  }
+  const files = entries
+    .filter(entry => entry.isFile() && entry.name !== "files.json")
+    .map(entry => ({ name: entry.name, url: `${folder}/${entry.name}` }));
+
+  await fs.writeFile(
+    path.join(dir, "files.json"),
+    JSON.stringify(files, null, 2) + "\n",
+    "utf8"
+  );
 }
 
 async function main() {
-  const args = process.argv.slice(2);
-  // Default to both folders so running `node generate-manifest.js` covers Documents and Data
-  const folders = args.length ? args : ['Data', 'Documents', 'Pictures'];
-  for (const f of folders) {
-    await generate(f);
-  }
+  await generate("Data");
+  await generate("Documents");
+  await getPictures("Pictures");
 }
 
-main();
+main().catch(console.error);

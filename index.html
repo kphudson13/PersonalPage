@@ -276,6 +276,16 @@
 
     #file-panel-content p.muted { margin:0; }
 
+        .location-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .location-heading {
+      margin: 0 0 0.65rem;
+      color: #e5e7eb;
+      font-size: 1.2rem;
+    }
+
   </style>
 </head>
 <body>
@@ -483,26 +493,48 @@
 
           content.innerHTML = '';
 
-          if (isPictureFolder) {
-            // Show images as a thumbnail grid; click a thumbnail to view full-size
+                    if (isPictureFolder) {
             panel.classList.add('file-panel-wide');
-            const grid = document.createElement('div');
-            grid.className = 'picture-grid';
 
-            files.forEach(f => {
-              const figure = document.createElement('figure');
+            const picturesByLocation = files.reduce((groups, file) => {
+              const location = file.location || 'Other';
+              if (!groups[location]) groups[location] = [];
+              groups[location].push(file);
+              return groups;
+            }, {});
 
-              const img = document.createElement('img');
-              img.src = f.url;
-              img.alt = f.name;
-              img.loading = 'lazy';
-              img.addEventListener('click', () => openLightbox(f.url, f.name));
+            Object.keys(picturesByLocation)
+              .sort((a, b) => a.localeCompare(b))
+              .forEach(location => {
+                const section = document.createElement('section');
+                section.className = 'location-section';
 
-              figure.appendChild(img);
-              grid.appendChild(figure);
-            });
+                const heading = document.createElement('h4');
+                heading.className = 'location-heading';
+                heading.textContent = location;
+                section.appendChild(heading);
 
-            content.appendChild(grid);
+                const grid = document.createElement('div');
+                grid.className = 'picture-grid';
+
+                picturesByLocation[location].forEach(file => {
+                  const figure = document.createElement('figure');
+
+                  const img = document.createElement('img');
+                  img.src = file.url;
+                  img.alt = file.name;
+                  img.loading = 'lazy';
+                  img.addEventListener('click', () => {
+                    openLightbox(file.url, file.name);
+                  });
+
+                  figure.appendChild(img);
+                  grid.appendChild(figure);
+                });
+
+                section.appendChild(grid);
+                content.appendChild(section);
+              });
           } else {
             // Default: plain download links (used by Documents/Data)
             const ul = document.createElement('ul');
