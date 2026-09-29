@@ -1,122 +1,152 @@
 [
   {
-    "name": "20220906_150938.jpg",
-    "url": "Pictures/20220906_150938.jpg"
-  },
-  {
-    "name": "20220922_072801.jpg",
-    "url": "Pictures/20220922_072801.jpg"
-  },
-  {
-    "name": "20230129_150100.jpg",
-    "url": "Pictures/20230129_150100.jpg"
-  },
-  {
-    "name": "20230129_150113.jpg",
-    "url": "Pictures/20230129_150113.jpg"
-  },
-  {
-    "name": "20250206_220155.jpg",
-    "url": "Pictures/20250206_220155.jpg"
-  },
-  {
-    "name": "20250824_155727.jpg",
-    "url": "Pictures/20250824_155727.jpg"
-  },
-  {
-    "name": "20260213_105028.jpg",
-    "url": "Pictures/20260213_105028.jpg"
-  },
-  {
-    "name": "20260306_113917.jpg",
-    "url": "Pictures/20260306_113917.jpg"
-  },
-  {
-    "name": "20260426_221947.jpg",
-    "url": "Pictures/20260426_221947.jpg"
-  },
-  {
-    "name": "DSC_1476.jpg",
-    "url": "Pictures/DSC_1476.jpg"
-  },
-  {
-    "name": "DSC_1903.jpg",
-    "url": "Pictures/DSC_1903.jpg"
-  },
-  {
     "name": "IMG-20251004-WA0005.jpg",
-    "url": "Pictures/IMG-20251004-WA0005.jpg"
-  },
-  {
-    "name": "IMG_0908.jpg",
-    "url": "Pictures/IMG_0908.jpg"
-  },
-  {
-    "name": "IMG_1474.jpg",
-    "url": "Pictures/IMG_1474.jpg"
-  },
-  {
-    "name": "IMG_20220901_003639_268.jpg",
-    "url": "Pictures/IMG_20220901_003639_268.jpg"
-  },
-  {
-    "name": "IMG_20260212_163126.jpg",
-    "url": "Pictures/IMG_20260212_163126.jpg"
-  },
-  {
-    "name": "IMG_20260302_002133.jpg",
-    "url": "Pictures/IMG_20260302_002133.jpg"
-  },
-  {
-    "name": "IMG_2815.jpg",
-    "url": "Pictures/IMG_2815.jpg"
+    "url": "Pictures/Alberta/IMG-20251004-WA0005.jpg",
+    "location": "Alberta"
   },
   {
     "name": "Snapchat-1090341013.jpg",
-    "url": "Pictures/Snapchat-1090341013.jpg"
-  },
-  {
-    "name": "Snapchat-1313012511.jpg",
-    "url": "Pictures/Snapchat-1313012511.jpg"
-  },
-  {
-    "name": "Snapchat-1391260230.jpg",
-    "url": "Pictures/Snapchat-1391260230.jpg"
-  },
-  {
-    "name": "Snapchat-1797955853.jpg",
-    "url": "Pictures/Snapchat-1797955853.jpg"
-  },
-  {
-    "name": "Snapchat-1818430655.jpg",
-    "url": "Pictures/Snapchat-1818430655.jpg"
+    "url": "Pictures/Alberta/Snapchat-1090341013.jpg",
+    "location": "Alberta"
   },
   {
     "name": "Snapchat-617779784.jpg",
-    "url": "Pictures/Snapchat-617779784.jpg"
-  },
-  {
-    "name": "Snapchat-84909695.jpg",
-    "url": "Pictures/Snapchat-84909695.jpg"
-  },
-  {
-    "name": "Snapchat-88432677.jpg",
-    "url": "Pictures/Snapchat-88432677.jpg"
+    "url": "Pictures/Alberta/Snapchat-617779784.jpg",
+    "location": "Alberta"
   },
   {
     "name": "Snapchat-885612211.jpg",
-    "url": "Pictures/Snapchat-885612211.jpg"
+    "url": "Pictures/Alberta/Snapchat-885612211.jpg",
+    "location": "Alberta"
+  },
+  {
+    "name": "IMG_0908.jpg",
+    "url": "Pictures/BC/IMG_0908.jpg",
+    "location": "BC"
+  },
+  {
+    "name": "IMG_20220901_003639_268.jpg",
+    "url": "Pictures/BC/IMG_20220901_003639_268.jpg",
+    "location": "BC"
+  },
+  {
+    "name": "IMG_2815.jpg",
+    "url": "Pictures/BC/IMG_2815.jpg",
+    "location": "BC"
+  },
+  {
+    "name": "Snapchat-1797955853.jpg",
+    "url": "Pictures/BC/Snapchat-1797955853.jpg",
+    "location": "BC"
+  },
+  {
+    "name": "20220906_150938.jpg",
+    "url": "Pictures/Bamfield/20220906_150938.jpg",
+    "location": "Bamfield"
+  },
+  {
+    "name": "20220922_072801.jpg",
+    "url": "Pictures/Bamfield/20220922_072801.jpg",
+    "location": "Bamfield"
+  },
+  {
+    "name": "Snapchat-1313012511.jpg",
+    "url": "Pictures/Bamfield/Snapchat-1313012511.jpg",
+    "location": "Bamfield"
+  },
+  {
+    "name": "Snapchat-1391260230.jpg",
+    "url": "Pictures/Bamfield/Snapchat-1391260230.jpg",
+    "location": "Bamfield"
+  },
+  {
+    "name": "Snapchat-84909695.jpg",
+    "url": "Pictures/Bamfield/Snapchat-84909695.jpg",
+    "location": "Bamfield"
+  },
+  {
+    "name": "Snapchat-88432677.jpg",
+    "url": "Pictures/Bamfield/Snapchat-88432677.jpg",
+    "location": "Bamfield"
   },
   {
     "name": "received_1460703624444424.jpeg",
-    "url": "Pictures/received_1460703624444424.jpeg"
+    "url": "Pictures/Bamfield/received_1460703624444424.jpeg",
+    "location": "Bamfield"
   },
   {
     "name": "received_1889248137949468.jpeg",
-    "url": "Pictures/received_1889248137949468.jpeg"
+    "url": "Pictures/Bamfield/received_1889248137949468.jpeg",
+    "location": "Bamfield"
   },
   {
     "name": "received_3335976666648483.jpeg",
-    "url": "Pictures/received_3335976666648483.jpeg"
+    "url": "Pictures/Bamfield/received_3335976666648483.jpeg",
+    "location": "Bamfield"
+  },
+  {
+    "name": "20250206_220155.jpg",
+    "url": "Pictures/Florida/20250206_220155.jpg",
+    "location": "Florida"
+  },
+  {
+    "name": "20250824_155727.jpg",
+    "url": "Pictures/Florida/20250824_155727.jpg",
+    "location": "Florida"
+  },
+  {
+    "name": "20260213_105028.jpg",
+    "url": "Pictures/Florida/20260213_105028.jpg",
+    "location": "Florida"
+  },
+  {
+    "name": "20260306_113917.jpg",
+    "url": "Pictures/Florida/20260306_113917.jpg",
+    "location": "Florida"
+  },
+  {
+    "name": "20260426_221947.jpg",
+    "url": "Pictures/Florida/20260426_221947.jpg",
+    "location": "Florida"
+  },
+  {
+    "name": "IMG_20260212_163126.jpg",
+    "url": "Pictures/Florida/IMG_20260212_163126.jpg",
+    "location": "Florida"
+  },
+  {
+    "name": "IMG_20260302_002133.jpg",
+    "url": "Pictures/Florida/IMG_20260302_002133.jpg",
+    "location": "Florida"
+  },
+  {
+    "name": "20230129_150100.jpg",
+    "url": "Pictures/Yukon/20230129_150100.jpg",
+    "location": "Yukon"
+  },
+  {
+    "name": "20230129_150113.jpg",
+    "url": "Pictures/Yukon/20230129_150113.jpg",
+    "location": "Yukon"
+  },
+  {
+    "name": "DSC_1476.jpg",
+    "url": "Pictures/Yukon/DSC_1476.jpg",
+    "location": "Yukon"
+  },
+  {
+    "name": "DSC_1903.jpg",
+    "url": "Pictures/Yukon/DSC_1903.jpg",
+    "location": "Yukon"
+  },
+  {
+    "name": "IMG_1474.jpg",
+    "url": "Pictures/Yukon/IMG_1474.jpg",
+    "location": "Yukon"
+  },
+  {
+    "name": "Snapchat-1818430655.jpg",
+    "url": "Pictures/Yukon/Snapchat-1818430655.jpg",
+    "location": "Yukon"
   }
 ]
