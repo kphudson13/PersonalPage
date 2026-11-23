@@ -5,6 +5,46 @@
     "location": "Alberta"
   },
   {
+    "name": "IMG_3349.jpg",
+    "url": "Pictures/Alberta/IMG_3349.jpg",
+    "location": "Alberta"
+  },
+  {
+    "name": "IMG_7609.jpg",
+    "url": "Pictures/Alberta/IMG_7609.jpg",
+    "location": "Alberta"
+  },
+  {
+    "name": "IMG_8437.jpg",
+    "url": "Pictures/Alberta/IMG_8437.jpg",
+    "location": "Alberta"
+  },
+  {
+    "name": "IMG_8523.jpg",
+    "url": "Pictures/Alberta/IMG_8523.jpg",
+    "location": "Alberta"
+  },
+  {
+    "name": "IMG_9190.jpg",
+    "url": "Pictures/Alberta/IMG_9190.jpg",
+    "location": "Alberta"
+  },
+  {
+    "name": "Snails1.png",
+    "url": "Pictures/Alberta/Snails1.png",
+    "location": "Alberta"
+  },
+  {
+    "name": "Snails2.png",
+    "url": "Pictures/Alberta/Snails2.png",
+    "location": "Alberta"
+  },
+  {
+    "name": "Snails3.jpg",
+    "url": "Pictures/Alberta/Snails3.jpg",
+    "location": "Alberta"
+  },
+  {
     "name": "Snapchat-1090341013.jpg",
     "url": "Pictures/Alberta/Snapchat-1090341013.jpg",
     "location": "Alberta"
@@ -20,26 +60,6 @@
     "location": "Alberta"
   },
   {
-    "name": "IMG_0908.jpg",
-    "url": "Pictures/BC/IMG_0908.jpg",
-    "location": "BC"
-  },
-  {
-    "name": "IMG_20220901_003639_268.jpg",
-    "url": "Pictures/BC/IMG_20220901_003639_268.jpg",
-    "location": "BC"
-  },
-  {
-    "name": "IMG_2815.jpg",
-    "url": "Pictures/BC/IMG_2815.jpg",
-    "location": "BC"
-  },
-  {
-    "name": "Snapchat-1797955853.jpg",
-    "url": "Pictures/BC/Snapchat-1797955853.jpg",
-    "location": "BC"
-  },
-  {
     "name": "20220906_150938.jpg",
     "url": "Pictures/Bamfield/20220906_150938.jpg",
     "location": "Bamfield"
@@ -47,6 +67,21 @@
   {
     "name": "20220922_072801.jpg",
     "url": "Pictures/Bamfield/20220922_072801.jpg",
+    "location": "Bamfield"
+  },
+  {
+    "name": "received_1460703624444424.jpeg",
+    "url": "Pictures/Bamfield/received_1460703624444424.jpeg",
+    "location": "Bamfield"
+  },
+  {
+    "name": "received_1889248137949468.jpeg",
+    "url": "Pictures/Bamfield/received_1889248137949468.jpeg",
+    "location": "Bamfield"
+  },
+  {
+    "name": "received_3335976666648483.jpeg",
+    "url": "Pictures/Bamfield/received_3335976666648483.jpeg",
     "location": "Bamfield"
   },
   {
@@ -70,19 +105,39 @@
     "location": "Bamfield"
   },
   {
-    "name": "received_1460703624444424.jpeg",
-    "url": "Pictures/Bamfield/received_1460703624444424.jpeg",
-    "location": "Bamfield"
+    "name": "IMG_0597.jpg",
+    "url": "Pictures/BC/IMG_0597.jpg",
+    "location": "BC"
   },
   {
-    "name": "received_1889248137949468.jpeg",
-    "url": "Pictures/Bamfield/received_1889248137949468.jpeg",
-    "location": "Bamfield"
+    "name": "IMG_0908.jpg",
+    "url": "Pictures/BC/IMG_0908.jpg",
+    "location": "BC"
   },
   {
-    "name": "received_3335976666648483.jpeg",
-    "url": "Pictures/Bamfield/received_3335976666648483.jpeg",
-    "location": "Bamfield"
+    "name": "IMG_0993.jpg",
+    "url": "Pictures/BC/IMG_0993.jpg",
+    "location": "BC"
+  },
+  {
+    "name": "IMG_1098.jpg",
+    "url": "Pictures/BC/IMG_1098.jpg",
+    "location": "BC"
+  },
+  {
+    "name": "IMG_20220901_003639_268.jpg",
+    "url": "Pictures/BC/IMG_20220901_003639_268.jpg",
+    "location": "BC"
+  },
+  {
+    "name": "IMG_2815.jpg",
+    "url": "Pictures/BC/IMG_2815.jpg",
+    "location": "BC"
+  },
+  {
+    "name": "Snapchat-1797955853.jpg",
+    "url": "Pictures/BC/Snapchat-1797955853.jpg",
+    "location": "BC"
   },
   {
     "name": "20250206_220155.jpg",
@@ -137,6 +192,41 @@
   {
     "name": "DSC_1903.jpg",
     "url": "Pictures/Yukon/DSC_1903.jpg",
+    "location": "Yukon"
+  },
+  {
+    "name": "IMG_0049.JPG",
+    "url": "Pictures/Yukon/IMG_0049.JPG",
+    "location": "Yukon"
+  },
+  {
+    "name": "IMG_0071.JPG",
+    "url": "Pictures/Yukon/IMG_0071.JPG",
+    "location": "Yukon"
+  },
+  {
+    "name": "IMG_0083-2.jpg",
+    "url": "Pictures/Yukon/IMG_0083-2.jpg",
+    "location": "Yukon"
+  },
+  {
+    "name": "IMG_0100-2.jpg",
+    "url": "Pictures/Yukon/IMG_0100-2.jpg",
+    "location": "Yukon"
+  },
+  {
+    "name": "IMG_0158-2.jpg",
+    "url": "Pictures/Yukon/IMG_0158-2.jpg",
+    "location": "Yukon"
+  },
+  {
+    "name": "IMG_0222.JPG",
+    "url": "Pictures/Yukon/IMG_0222.JPG",
+    "location": "Yukon"
+  },
+  {
+    "name": "IMG_0335.JPG",
+    "url": "Pictures/Yukon/IMG_0335.JPG",
     "location": "Yukon"
   },
   {
